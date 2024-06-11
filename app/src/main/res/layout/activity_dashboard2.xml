@@ -42,9 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp"
-        android:text="Dasboard"
+        android:text="@string/dashboard"
         android:textStyle="bold"
-        android:textSize="25dp"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,16 +64,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="Welcome, "
+            android:text="@string/welcome"
             android:textStyle="normal"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
         <TextView
             android:id="@+id/user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="benny"
+            android:text="@string/username"
             android:textStyle="normal"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,9 +118,9 @@
                 android:id="@+id/location_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location"
+                android:text="@string/location"
                 android:textColor="@color/white"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -133,35 +133,35 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Air Quality Index"
+                android:text="@string/air_quality_index"
                 android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_numberAirQuality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:text="20"
+                android:text="@string/index_number"
                 android:textColor="@color/white"
-                android:textSize="80dp"
+                android:textSize="80sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Air is"
+            android:text="@string/index_header"
             android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_KondisiUdara"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GOOD"
+            android:text="@string/index_quality"
             android:textColor="@color/white"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -171,8 +171,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="20dp"
-        android:text="Chalenge Today: "
-        android:textSize="20dp"
+        android:text="@string/chalenge_today"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -198,15 +198,15 @@
                 android:id="@+id/tv_challengeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chalenge name"
-                android:textSize="18dp"
+                android:text="@string/chalenge_name"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"/>
             <TextView
                 android:id="@+id/tv_challengeDesc"
                 android:layout_width="270dp"
                 android:layout_height="80dp"
-                android:text="desc"
+                android:text="@string/challenge_desc"
                 android:textColor="@color/white"/>
         </LinearLayout>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -224,8 +224,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:layout_marginHorizontal="20dp"
-    android:text="Chalenge Today: "
-    android:textSize="20dp"
+    android:text="@string/chalenge_today"
+    android:textSize="20sp"
     android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

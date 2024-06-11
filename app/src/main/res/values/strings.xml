@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">EcoMate</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="welcome">Welcome,</string>
+    <string name="username">username</string>
+    <string name="location">Location</string>
+    <string name="air_quality_index">Air Quality Index</string>
+    <string name="index_number">20</string>
+    <string name="index_header">Air is</string>
+    <string name="index_quality">GOOD</string>
+    <string name="chalenge_today">Chalenge Today:</string>
+    <string name="chalenge_name">Chalenge name</string>
+    <string name="challenge_desc">desc</string>
+    <string name="profile">Profile</string>
+    <string name="points">Points</string>
+    <string name="total_point">00</string>
+    <string name="logout">Logout</string>
 </resources>
