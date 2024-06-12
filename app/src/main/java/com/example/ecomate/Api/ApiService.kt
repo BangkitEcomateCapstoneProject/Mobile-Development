@@ -18,7 +18,7 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ):PredictResponse
     @FormUrlEncoded
-    @POST("articleRecomend")
+    @POST("recommend")
     suspend fun ArticleRecomend(
         @Field("text") text: String
     ):ArticleResponse
