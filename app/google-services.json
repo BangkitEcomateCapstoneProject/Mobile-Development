@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342912276982",
+    "project_id": "ecomate-dd340",
+    "storage_bucket": "ecomate-dd340.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342912276982:android:efa99fcb504858126b8fd7",
+        "android_client_info": {
+          "package_name": "com.example.ecomate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342912276982-apoag8um18c5lht0hj0bp2ks24d8gbhc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecomate",
+            "certificate_hash": "b88fdf2afdecb54b0c3261ab1be9c1a7fe6ce2ce"
+          }
+        },
+        {
+          "client_id": "342912276982-ipfbc0p4nuud24mh5m08vrke64qi5h8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnBtxX8lsdKKJDog2fKs-2tduUMI3snpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342912276982-ipfbc0p4nuud24mh5m08vrke64qi5h8s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

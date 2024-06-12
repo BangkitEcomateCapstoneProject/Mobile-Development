@@ -9,7 +9,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".DashboardActivity">
+    tools:context=".UI.Dashboard.DashboardActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_appbar"
@@ -213,7 +213,6 @@
             android:id="@+id/btn_plusChallenge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end||bottom"
             android:layout_margin="10dp"
             android:backgroundTint="@color/white"
             android:src="@drawable/baseline_control_point_24"/>
