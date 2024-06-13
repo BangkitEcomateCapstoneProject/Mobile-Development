@@ -4,16 +4,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.ecomate.R
-import com.example.ecomate.UI.Dashboard.DashboardActivity
+import com.example.ecomate.UI.Dashboard.MainActivity
 import com.example.ecomate.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -46,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (currentUser != null) {
             // The user is already signed in, navigate to MainActivity
-            val intent = Intent(this, DashboardActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish() // finish the current activity to prevent the user from coming back to the SignInActivity using the back button
         }
@@ -92,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     Toast.makeText(this, "Signed in as ${user?.displayName}", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, DashboardActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()

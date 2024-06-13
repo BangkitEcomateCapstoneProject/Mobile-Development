@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@drawable/icon_home"/>
+    <item
+        android:id="@+id/nav_challenge"
+        android:title="Challenge"
+        android:icon="@drawable/icon_challenge"/>
+    <item
+        android:title=""
+        android:enabled="true"/>
+    <item
+        android:id="@+id/nav_trashHub"
+        android:title="TrashHub"
+        android:icon="@drawable/icon_trashhub"/>
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile"
+        android:icon="@drawable/icon_profile"/>
+</menu>
