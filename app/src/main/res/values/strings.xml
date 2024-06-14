@@ -9,6 +9,7 @@
     <string name="index_header">Air is</string>
     <string name="index_quality">GOOD</string>
     <string name="challenge_today">Challenge Today:</string>
+    <string name="Result_predict">Result:</string>
     <string name="challenge_name">Challenge name</string>
     <string name="challenge_desc">desc</string>
     <string name="profile">Profile</string>

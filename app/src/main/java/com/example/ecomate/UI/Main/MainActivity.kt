@@ -1,5 +1,6 @@
-package com.example.ecomate.UI.Dashboard
+package com.example.ecomate.UI.Main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -16,6 +17,7 @@ import com.example.ecomate.DashboardFragment
 import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
 import com.example.ecomate.UI.Login.LoginViewModel
+import com.example.ecomate.UI.ResultPredict.ResultPreddictActivity
 import com.example.ecomate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         fragmentManager = supportFragmentManager
         openFragment(DashboardFragment())
         binding.fabScan.setOnClickListener {
-            Toast.makeText(this,"Scan",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MainActivity, ResultPreddictActivity::class.java)
+            startActivity(intent)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.layoutAppbar) { view, insets ->

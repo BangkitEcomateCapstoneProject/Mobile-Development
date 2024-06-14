@@ -16,7 +16,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.example.ecomate.R
-import com.example.ecomate.UI.Dashboard.MainActivity
+import com.example.ecomate.UI.Main.MainActivity
 import com.example.ecomate.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
