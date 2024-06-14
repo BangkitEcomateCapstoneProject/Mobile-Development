@@ -3,7 +3,6 @@ package com.example.ecomate.UI.Dashboard
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.ecomate.DashboardFragment
+import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
 import com.example.ecomate.UI.Login.LoginViewModel
 import com.example.ecomate.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,11 +28,12 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.layoutAppbar)
+//        setSupportActionBar(binding.layoutAppbar) todo
         binding.bottomNav.background = null
         binding.bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.nav_home -> openFragment(DashboardFragment())
+                R.id.nav_profile -> openFragment(ProfileFragment())
             }
             true
         }
@@ -57,10 +57,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else{
-                super.onBackPressedDispatcher.onBackPressed()
+            super.onBackPressedDispatcher.onBackPressed()
         }
     }
     private fun openFragment(fragment: Fragment){

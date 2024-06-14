@@ -25,8 +25,9 @@
         android:layout_marginTop="10dp"
         android:text="Welcome"
         android:textStyle="bold"
-        android:textSize="35dp"
+        android:textSize="35sp"
         android:textColor="@color/greenEco"
+        android:fontFamily="@font/poppins_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,10 +37,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:text="Sign In to continue"
+        android:text="@string/sign_in_to_continue"
         android:textStyle="normal"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/greenEco"
+        android:fontFamily="@font/poppins_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textWelcome" />
@@ -49,10 +51,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:text="Email"
+        android:text="@string/email"
         android:textStyle="normal"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/greenEco"
+        android:fontFamily="@font/poppins_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textSignIn" />
@@ -72,6 +75,9 @@
             android:id="@+id/EditText_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:fontFamily="@font/poppins_regular"
+            android:paddingStart="50dp"
             android:ems="10"
             android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -81,10 +87,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp"
-        android:text="Password"
+        android:text="@string/password"
         android:textStyle="normal"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/greenEco"
+        android:fontFamily="@font/poppins_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutEmail" />
@@ -104,8 +111,11 @@
             android:id="@+id/EditText_Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:paddingStart="50dp"
+            android:fontFamily="@font/poppins_regular"
             android:ems="10"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -115,8 +125,8 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/button_rounded"
-        android:text="Login"
-        android:textSize="18dp"
+        android:text="@string/login"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutPass" />
@@ -140,21 +150,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/button_google"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center_horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don’t have an account?"/>
+            android:text="@string/dont_have_an_account"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textColor="@color/greenEco"
-            android:text="Register"/>
+            android:text="@string/register"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
