@@ -14,7 +14,7 @@ object ApiConfigAI {
             .addInterceptor(loggingInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://trash-detection-drmewztzbq-et.a.run.app")
+            .baseUrl("https://trash-detection-drmewztzbq-et.a.run.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

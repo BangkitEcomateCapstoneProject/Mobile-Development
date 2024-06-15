@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -17,7 +16,7 @@ import com.example.ecomate.DashboardFragment
 import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
 import com.example.ecomate.UI.Login.LoginViewModel
-import com.example.ecomate.UI.ResultPredict.ResultPreddictActivity
+import com.example.ecomate.UI.ResultPredict.ResultPredictActivity
 import com.example.ecomate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var fragmentManager: FragmentManager
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         fragmentManager = supportFragmentManager
         openFragment(DashboardFragment())
         binding.fabScan.setOnClickListener {
-            val intent = Intent(this@MainActivity, ResultPreddictActivity::class.java)
+            val intent = Intent(this@MainActivity, ResultPredictActivity::class.java)
             startActivity(intent)
         }
 

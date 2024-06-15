@@ -37,5 +37,9 @@
     <string name="logoutMessage">Anda akan logout. Anda harus login untuk mengakses EcoMate.</string>
     <string name="logoutTitle">Anda akan logout!</string>
     <string name="batal">batal</string>
+    <string name="resultPredict">result Prediction</string>
+    <string name="article_content">Article Content</string>
+    <string name="title_article">Title Article</string>
+    <string name="retry">retry</string>
 
 </resources>

@@ -9,12 +9,11 @@ object ApiConfigArticle {
     fun getApiService(): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-//
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://article-recommendation-drmewztzbq-et.a.run.app")
+            .baseUrl("https://article-recommendation-drmewztzbq-et.a.run.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

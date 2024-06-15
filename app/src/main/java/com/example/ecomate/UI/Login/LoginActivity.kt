@@ -16,9 +16,9 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.example.ecomate.R
+import com.example.ecomate.Response.LoginResult
 import com.example.ecomate.UI.Main.MainActivity
 import com.example.ecomate.databinding.ActivityLoginBinding
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -30,13 +30,12 @@ import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     companion object {
-        private const val RC_SIGN_IN = 9001
         private const val TAG = "GoogleActivity"
     }
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var loginPreferences: LoginPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
         setupView()
         val currentUser = auth.currentUser
+        loginPreferences = LoginPreferences(this)
 
         if (currentUser != null) {
             // The user is already signed in, navigate to MainActivity
@@ -71,30 +71,18 @@ class LoginActivity : AppCompatActivity() {
         }
         supportActionBar?.hide()
     }
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-//        if (requestCode == RC_SIGN_IN) {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            Log.d("google Sign In", "$task")
-//            try {
-//                // Google Sign In was successful, authenticate with Firebase
-//                val account = task.getResult(ApiException::class.java)!!
-//                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-//                firebaseAuthWithGoogle(account.idToken!!)
-//            } catch (e: ApiException) {
-//                // Google Sign In failed, update UI appropriately
-//                Log.w(TAG, "Google sign in failed", e)
-//            }
-//        }
-//    }
+
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
+                    if (user != null) {
+                        // Save user info to shared preferences
+                        val loginResult = LoginResult(user.uid, user.displayName, user.getIdToken(false).result?.token)
+                        loginPreferences.setLogin(loginResult)
+                    }
                     Toast.makeText(this, "Signed in as ${user?.displayName}", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
@@ -105,17 +93,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build()
-//
-//        googleSignInClient = GoogleSignIn.getClient(this, gso)
-//        Log.d("GoogleSignIn.getClient", "$googleSignInClient")
-//        val signInIntent = googleSignInClient.signInIntent
-//        Log.d("signInIntent", "start intent")
-//        startActivityForResult(signInIntent, RC_SIGN_IN)
-
         val credentialManager = CredentialManager.create(this) //import from androidx.CredentialManager
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
