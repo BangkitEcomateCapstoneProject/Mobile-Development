@@ -1,6 +1,6 @@
 package com.example.ecomate.Api
 
-import com.example.ecomate.Response.ArticleResponse
+import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.Response.PredictResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -18,7 +18,7 @@ interface ApiService {
     ):PredictResponse
 
     @POST("recommend")
-    suspend fun ArticleRecomend(
+    fun ArticleRecomend(
         @Body request: ArticleRequest
-    ): Call<ArticleResponse>
+    ): Call<List<ArticleResponseItem>>
 }
