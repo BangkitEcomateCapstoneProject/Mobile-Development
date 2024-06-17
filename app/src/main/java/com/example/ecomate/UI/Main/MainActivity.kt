@@ -17,6 +17,7 @@ import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
 import com.example.ecomate.UI.Login.LoginViewModel
 import com.example.ecomate.UI.ResultPredict.ResultPredictActivity
+import com.example.ecomate.UI.TrashHub.TrashHubFragment
 import com.example.ecomate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId){
                 R.id.nav_home -> openFragment(DashboardFragment())
                 R.id.nav_profile -> openFragment(ProfileFragment())
+                R.id.nav_trashHub -> openFragment(TrashHubFragment())
             }
             true
         }
