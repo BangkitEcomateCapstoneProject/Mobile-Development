@@ -18,7 +18,7 @@ import com.example.ecomate.Api.ApiConfigArticle
 import com.example.ecomate.Api.ApiService
 import com.example.ecomate.Api.ArticleRequest
 import com.example.ecomate.R
-import com.example.ecomate.Response.ArticleResponse
+import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.adapter.ArticleAdapter
 import com.example.ecomate.data.Result
@@ -54,8 +54,12 @@ class ResultPredictActivity : AppCompatActivity() {
         binding = ActivityResultPredictBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        startCamera()
+
+        binding.btnOk.setOnClickListener { finish() }
+
         setupRecyclerView()
+        startCamera()
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -92,17 +96,17 @@ class ResultPredictActivity : AppCompatActivity() {
                                     is Result.Loading -> {
                                         showLoading(true)
                                     }
+
                                     is Result.Error -> {
                                         showLoading(false)
                                         Log.w("ResultPredictActivity", "$result")
                                     }
+
                                     is Result.Success -> {
                                         showLoading(false)
                                         binding.imgPreviewfoto.setImageURI(currentImageUri)
                                         binding.textViewResultPredict.text = result.data.prediction
-                                        lifecycleScope.launch {
-                                            getArticles(result.data.prediction!!)
-                                        }
+                                        getArticles(result.data.prediction!!)
                                     }
                                 }
                             }
@@ -129,26 +133,28 @@ class ResultPredictActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getArticles(text: String) {
+
+    private fun getArticles(text: String) {
         showLoading(true)
+
         val client = articleApiService.ArticleRecomend(ArticleRequest(text))
-        client.enqueue(object : Callback<ArticleResponse> {
+        client.enqueue(object : Callback<List<ArticleResponseItem>> {
             override fun onResponse(
-                call: Call<ArticleResponse>,
-                response: Response<ArticleResponse>
+                call: Call<List<ArticleResponseItem>>,
+                response: Response<List<ArticleResponseItem>>
             ) {
                 showLoading(false)
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        articleAdapter.submitList(listOf(responseBody))
+                        articleAdapter.submitList(responseBody)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<ArticleResponseItem>>, t: Throwable) {
                 showLoading(false)
                 Log.e(TAG, "onFailure: ${t.message}")
             }
