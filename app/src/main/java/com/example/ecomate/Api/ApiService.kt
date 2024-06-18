@@ -3,6 +3,7 @@ package com.example.ecomate.Api
 import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.Response.TrashHubResponse
+import com.example.ecomate.Response.TrashHubResponseItem
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -23,11 +24,10 @@ interface ApiService {
     fun ArticleRecomend(
         @Body request: ArticleRequest
     ): Call<List<ArticleResponseItem>>
-    @GET("trashHub")
-    fun getTrashHub(): Call<TrashHubResponse>
-    @GET("search")
+    @GET("trashbins/")
+    fun getTrashHub(): Call<List<TrashHubResponseItem>>
+    @GET("trashbins/search")
     fun getSearchTrashHub(
-
     ): Call<TrashHubResponse>
 
 }

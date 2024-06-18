@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcoMate"
         tools:targetApi="31" >
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
+        <meta-data
+            android:name="com.google.android.credentials.oauth_client_id"
+            android:value="@string/default_web_client_id" />
+        <meta-data
+            android:name="com.google.android.credentials.credentials_supported"
+            android:value="true" />
         <activity
             android:name=".UI.ResultPredict.ResultPredictActivity"
             android:exported="false" />
@@ -41,5 +51,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 </manifest>

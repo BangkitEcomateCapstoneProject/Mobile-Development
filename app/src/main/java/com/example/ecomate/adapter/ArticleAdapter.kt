@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.databinding.ItemArticleBinding
 
-class ArticleAdapter : ListAdapter<ArticleResponseItem, ArticleAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class   ArticleAdapter : ListAdapter<ArticleResponseItem, ArticleAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding =

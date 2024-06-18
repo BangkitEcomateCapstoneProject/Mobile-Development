@@ -13,7 +13,7 @@ object ApiConfigTrashHub {
             .addInterceptor(loggingInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://article-recommendation-drmewztzbq-et.a.run.app/")
+            .baseUrl("https://trashubapi-drmewztzbq-et.a.run.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

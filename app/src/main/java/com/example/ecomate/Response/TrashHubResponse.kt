@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 data class TrashHubResponse(
 
 	@field:SerializedName("TrashHubResponse")
-	val trashHubResponse: ArrayList<TrashHubResponseItem>
+	val trashHubResponse: List<TrashHubResponseItem>
 )
 
 data class TrashHubResponseItem(
 
 	@field:SerializedName("Alamat")
-	val alamat: String? = null,
+	val alamat: String,
 
 	@field:SerializedName("Nama_Bak_Sampah")
-	val namaBakSampah: String? = null
+	val namaBakSampah: String
 )
