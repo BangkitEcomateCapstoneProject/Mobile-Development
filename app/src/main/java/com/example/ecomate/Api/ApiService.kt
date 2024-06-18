@@ -4,13 +4,19 @@ import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.Response.TrashHubResponse
 import com.example.ecomate.Response.TrashHubResponseItem
+import com.example.ecomate.Response.UserChallengeIdResponse
+import com.example.ecomate.Response.UserChallengesResponse
+import com.example.ecomate.Response.UserIdResponse
+import com.example.ecomate.Response.UserResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface ApiService {
 
@@ -30,4 +36,49 @@ interface ApiService {
     fun getSearchTrashHub(
     ): Call<TrashHubResponse>
 
+    @GET("/users")
+    fun getUsers(): Call<UserResponse>
+
+    @GET("/{userId}")
+    fun getUserById(
+        @Path("userId") userId: String
+    ): Call<UserIdResponse>
+
+    @POST("/storeUser")
+    fun storeUser(
+        @Body request: StoreUserRequest
+    ): Call<UserIdResponse>
+
+    @GET("/{userId}/challenges")
+    fun getUserChallenges(
+        @Path("userId") userId: String
+    ): UserChallengesResponse
+
+    @GET("/{userId}/challenges/{challengeId}")
+    fun getChallengeDetail(
+        @Path("userId") userId: String,
+        @Path("challengeId") challengeId: Int
+    ): UserChallengeIdResponse
+
+    @POST("/{userId}/challenges")
+    fun createChallenge(
+        @Path("userId") userId: String,
+        @Body request: ChallengeRequest
+    ): UserChallengeIdResponse
+
+    @PUT("/{userId}/challenges/{challengeId}/status")
+    fun updateChallengeStatus(
+        @Path("userId") userId: String,
+        @Path("challengeId") challengeId: Int,
+        @Body request: ChallengeStatusRequest
+    ): UserChallengeIdResponse
+
+    @POST("/{userId}/addPoints")
+    fun addPointToUser(
+        @Path("userId") userId: String,
+        @Body request: AddPointRequest
+    ): UserIdResponse
+
+    //create Trash Detection todo
+    //get data Trash Detection todo
 }

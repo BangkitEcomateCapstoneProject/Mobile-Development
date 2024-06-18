@@ -15,8 +15,12 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.example.ecomate.Api.ApiConfigDatabase
+import com.example.ecomate.Api.ApiService
+import com.example.ecomate.Api.StoreUserRequest
 import com.example.ecomate.R
 import com.example.ecomate.Response.LoginResult
+import com.example.ecomate.Response.UserIdResponse
 import com.example.ecomate.UI.Main.MainActivity
 import com.example.ecomate.databinding.ActivityLoginBinding
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -27,6 +31,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -36,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var loginPreferences: LoginPreferences
+    private val databaseApiService: ApiService = ApiConfigDatabase.getApiService()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -82,8 +91,8 @@ class LoginActivity : AppCompatActivity() {
                         // Save user info to shared preferences
                         val loginResult = LoginResult(user.uid, user.displayName, user.getIdToken(false).result?.token)
                         loginPreferences.setLogin(loginResult)
+                        userDataSync(user.uid)
                     }
-                    Toast.makeText(this, "Signed in as ${user?.displayName}", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 } else {
@@ -93,23 +102,23 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        val credentialManager = CredentialManager.create(this) //import from androidx.CredentialManager
+        val credentialManager = CredentialManager.create(this)
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(getString(R.string.default_web_client_id))
             .build()
-        val request = GetCredentialRequest.Builder() //import from androidx.CredentialManager
+        val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
         lifecycleScope.launch {
             try {
-                val result: GetCredentialResponse = credentialManager.getCredential( //import from androidx.CredentialManager
+                val result: GetCredentialResponse = credentialManager.getCredential(
                     request = request,
                     context = this@LoginActivity,
                 )
                 handleSignIn(result)
-            } catch (e: GetCredentialException) { //import from androidx.CredentialManager
+            } catch (e: GetCredentialException) {
                 Log.d("Error", e.message.toString())
             }
         }
@@ -138,6 +147,54 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun userDataSync(userId: String) {
+        val client = databaseApiService.getUserById(userId)
+        client.enqueue(object : Callback<UserIdResponse> {
+            override fun onResponse(
+                call: Call<UserIdResponse>,
+                response: Response<UserIdResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        if (responseBody.error) {
+                            val userEmail = auth.currentUser!!.email
+                            storeUser(userId, userEmail!!)
+                        }
+                    }
+                } else {
+                    Log.e("UserDataSync", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UserIdResponse>, t: Throwable) {
+                Log.e("UserDataSync", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun storeUser(userId: String, userEmail: String) {
+        val client = databaseApiService.storeUser(StoreUserRequest(userId, userEmail))
+        client.enqueue(object : Callback<UserIdResponse> {
+            override fun onResponse(
+                call: Call<UserIdResponse>,
+                response: Response<UserIdResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        Log.w("Store User", responseBody.toString())
+                    }
+                } else {
+                    Log.e("UserDataSync", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UserIdResponse>, t: Throwable) {
+                Log.e("UserDataSync", "onFailure: ${t.message}")
+            }
+        })
+    }
 }
 
 
