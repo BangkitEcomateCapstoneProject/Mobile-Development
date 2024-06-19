@@ -15,14 +15,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.ecomate.DashboardFragment
 import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
-import com.example.ecomate.UI.Login.LoginViewModel
 import com.example.ecomate.UI.ResultPredict.ResultPredictActivity
 import com.example.ecomate.UI.TrashHub.TrashHubFragment
 import com.example.ecomate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var fragmentManager: FragmentManager
     private lateinit var binding: ActivityMainBinding
 
@@ -61,14 +58,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else{
-            super.onBackPressedDispatcher.onBackPressed()
-        }
-    }
+
     private fun openFragment(fragment: Fragment){
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_wrapper, fragment)

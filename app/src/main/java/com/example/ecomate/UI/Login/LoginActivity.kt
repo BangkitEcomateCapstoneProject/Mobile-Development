@@ -39,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "GoogleActivity"
     }
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var loginPreferences: LoginPreferences

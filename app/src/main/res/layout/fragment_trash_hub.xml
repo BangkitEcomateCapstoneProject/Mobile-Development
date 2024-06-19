@@ -2,30 +2,40 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.Material3"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-<!--    <com.google.android.material.search.SearchBar-->
-<!--        android:id="@+id/searchBar"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginHorizontal="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:hint="@string/trashHub"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-<!--    </com.google.android.material.search.SearchBar>-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_trash_hub"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.Material3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_trash_hub" />
+        app:layout_constraintTop_toBottomOf="parent">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:iconifiedByDefault="false"
+                app:searchIcon="@drawable/baseline_search_24"
+                android:background="@drawable/searchbtn"
+                app:queryHint="@string/trashHub"
+                android:padding="10dp">
+            </androidx.appcompat.widget.SearchView>
+        </androidx.core.widget.NestedScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_trash_hub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:listitem="@layout/item_trash_hub" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
