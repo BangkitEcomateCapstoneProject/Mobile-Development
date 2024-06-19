@@ -20,12 +20,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_trash_hub"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/rv_trash_hub" />
-<!--        app:layout_constraintTop_toBottomOf="@+id/searchBar"-->
+        tools:listitem="@layout/item_trash_hub" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
