@@ -1,4 +1,4 @@
-package com.example.ecomate
+package com.example.ecomate.UI.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.ecomate.Api.ApiConfigDatabase
 import com.example.ecomate.Api.ApiService
+import com.example.ecomate.R
 import com.example.ecomate.Response.UserIdResponse
 import com.example.ecomate.UI.Login.LoginActivity
 import com.google.firebase.Firebase

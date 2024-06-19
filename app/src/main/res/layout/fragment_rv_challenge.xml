@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_user"
+        android:id="@+id/rv_challenge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        tools:listitem="@layout/rv_challenge"/>
+        tools:listitem="@layout/item_challenge_not_started"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

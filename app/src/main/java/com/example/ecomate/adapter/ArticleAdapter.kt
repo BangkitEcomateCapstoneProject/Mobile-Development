@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.databinding.ItemArticleBinding
 
-class   ArticleAdapter : ListAdapter<ArticleResponseItem, ArticleAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class ArticleAdapter : ListAdapter<ArticleResponseItem, ArticleAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding =
@@ -27,7 +27,6 @@ class   ArticleAdapter : ListAdapter<ArticleResponseItem, ArticleAdapter.MyViewH
     class MyViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(article: ArticleResponseItem) {
-            Log.d("binding article", article.title)
             binding.tvArticleTitle.text = article.title
             binding.tvArticleContent.text = article.cleanContent
             binding.cardArticle.setOnClickListener {

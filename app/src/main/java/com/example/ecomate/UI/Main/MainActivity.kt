@@ -6,17 +6,17 @@ import android.view.Menu
 import android.view.MenuInflater
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.ecomate.DashboardFragment
-import com.example.ecomate.ProfileFragment
 import com.example.ecomate.R
+import com.example.ecomate.UI.Challenge.ChallengeFragment
 import com.example.ecomate.UI.ResultPredict.ResultPredictActivity
 import com.example.ecomate.UI.TrashHub.TrashHubFragment
+import com.example.ecomate.UI.profile.ProfileFragment
 import com.example.ecomate.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.nav_home -> openFragment(DashboardFragment())
+                R.id.nav_challenge -> openFragment(ChallengeFragment())
                 R.id.nav_profile -> openFragment(ProfileFragment())
                 R.id.nav_trashHub -> openFragment(TrashHubFragment())
             }
