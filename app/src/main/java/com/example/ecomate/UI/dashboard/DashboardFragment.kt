@@ -45,7 +45,7 @@ class DashboardFragment : Fragment() {
         if (currentUser != null) {
             binding.user.text = currentUser.displayName
             getNotStartedChallenge()
-            getArticles("plastic")
+            getArticles("How to recycle plastic")
         }
     }
 

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,12 +14,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.ecomate.Api.AddDetectionRequest
 import com.example.ecomate.Api.ApiConfigAI
 import com.example.ecomate.Api.ApiConfigArticle
+import com.example.ecomate.Api.ApiConfigDatabase
 import com.example.ecomate.Api.ApiService
 import com.example.ecomate.Api.ArticleRequest
 import com.example.ecomate.R
 import com.example.ecomate.Response.ArticleResponseItem
+import com.example.ecomate.Response.ErrorResponse
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.adapter.ArticleAdapter
 import com.example.ecomate.data.Result
@@ -26,6 +30,7 @@ import com.example.ecomate.databinding.ActivityResultPredictBinding
 import com.example.ecomate.getImageUri
 import com.example.ecomate.reduceFileImage
 import com.example.ecomate.uriToFile
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -43,6 +48,7 @@ class ResultPredictActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultPredictBinding
     private var currentImageUri: Uri? = null
     private lateinit var articleAdapter: ArticleAdapter
+    private lateinit var auth: FirebaseAuth
 
     companion object {
         private const val TAG = "ResultPredictActivity"
@@ -54,12 +60,12 @@ class ResultPredictActivity : AppCompatActivity() {
         binding = ActivityResultPredictBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+        auth = FirebaseAuth.getInstance()
 
         binding.btnOk.setOnClickListener { finish() }
 
         setupRecyclerView()
         startCamera()
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -104,9 +110,27 @@ class ResultPredictActivity : AppCompatActivity() {
 
                                     is Result.Success -> {
                                         showLoading(false)
-                                        binding.imgPreviewfoto.setImageURI(currentImageUri)
-                                        binding.textViewResultPredict.text = result.data.prediction
-                                        getArticles(result.data.prediction!!)
+                                        val prediction = result.data.prediction.toString()
+                                        val probability: Double = result.data.probability as Double
+                                        val thresholds = 0.8
+
+                                        if (probability >= thresholds) {
+                                            binding.imgPreviewfoto.setImageURI(currentImageUri)
+                                            binding.textViewResultPredict.text = prediction
+
+                                            getArticles(result.data.prediction!!)
+                                            addDetectionData(AddDetectionRequest(prediction, probability))
+                                        } else {
+                                            AlertDialog.Builder(this@ResultPredictActivity).apply {
+                                                setTitle("Prediction Failed!")
+                                                setMessage("We are unable to process your photo. Please provide clearer photos.")
+                                                setPositiveButton(R.string.ok) { _, _ ->
+                                                    finish()
+                                                }
+                                                create()
+                                                show()
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -133,9 +157,9 @@ class ResultPredictActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun getArticles(text: String) {
+    private fun getArticles(result: String) {
         showLoading(true)
+        val text = "How to recycle $result"
 
         val client = articleApiService.ArticleRecomend(ArticleRequest(text))
         client.enqueue(object : Callback<List<ArticleResponseItem>> {
@@ -156,6 +180,32 @@ class ResultPredictActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<List<ArticleResponseItem>>, t: Throwable) {
                 showLoading(false)
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun addDetectionData(request: AddDetectionRequest) {
+        val currentUser = auth.currentUser
+
+        val client =
+            ApiConfigDatabase.getApiService().addDetectionData(currentUser!!.uid, request)
+        client.enqueue(object : Callback<ErrorResponse> {
+            override fun onResponse(
+                call: Call<ErrorResponse>,
+                response: Response<ErrorResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        Log.w(TAG, "onSuccess: ${response.message()}")
+                    }
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ErrorResponse>, t: Throwable) {
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })

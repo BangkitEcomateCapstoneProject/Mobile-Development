@@ -2,6 +2,8 @@ package com.example.ecomate.Api
 
 import com.example.ecomate.Response.ArticleResponseItem
 import com.example.ecomate.Response.ChallengeListResponseItem
+import com.example.ecomate.Response.DetectionResponse
+import com.example.ecomate.Response.ErrorResponse
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.Response.TrashHubResponseItem
 import com.example.ecomate.Response.UserChallengeIdResponse
@@ -84,6 +86,14 @@ interface ApiService {
         @Body request: AddPointRequest
     ): Call<UserIdResponse>
 
-    //create Trash Detection todo
-    //get data Trash Detection todo
+    @POST("/{userId}/trashDetection")
+    fun addDetectionData(
+        @Path("userId") userId: String,
+        @Body request: AddDetectionRequest
+    ): Call<ErrorResponse>
+
+    @GET("/{userId}/trashDetection")
+    fun getDetectionData(
+        @Path("userId") userId: String,
+    ): Call<DetectionResponse>
 }
