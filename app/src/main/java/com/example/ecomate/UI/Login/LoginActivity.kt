@@ -15,11 +15,16 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.example.ecomate.Api.ApiConfigChallenge
 import com.example.ecomate.Api.ApiConfigDatabase
 import com.example.ecomate.Api.ApiService
+import com.example.ecomate.Api.ChallengeRequest
 import com.example.ecomate.Api.StoreUserRequest
 import com.example.ecomate.R
+import com.example.ecomate.Response.ChallengeListResponseItem
 import com.example.ecomate.Response.LoginResult
+import com.example.ecomate.Response.UserChallengeIdResponse
+import com.example.ecomate.Response.UserChallengesResponse
 import com.example.ecomate.Response.UserIdResponse
 import com.example.ecomate.UI.Main.MainActivity
 import com.example.ecomate.databinding.ActivityLoginBinding
@@ -43,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var loginPreferences: LoginPreferences
     private val databaseApiService: ApiService = ApiConfigDatabase.getApiService()
+    private val challengeApiService: ApiService = ApiConfigChallenge.getApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,6 +166,7 @@ class LoginActivity : AppCompatActivity() {
                             val userEmail = auth.currentUser!!.email
                             storeUser(userId, userEmail!!)
                         }
+                        challengeDataSync(userId)
                     }
                 } else {
                     Log.e("UserDataSync", "onFailure: ${response.message()}")
@@ -191,6 +198,93 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<UserIdResponse>, t: Throwable) {
                 Log.e("UserDataSync", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun challengeDataSync(userId: String) {
+        Log.w("UserDataSync", "challengeDataSync called from UserDataSync")
+
+        val client = databaseApiService.getUserChallenges(userId)
+        client.enqueue(object : Callback<UserChallengesResponse> {
+            override fun onResponse(
+                call: Call<UserChallengesResponse>,
+                response: Response<UserChallengesResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        if (responseBody.challengeList.isEmpty()) {
+                            getChallengeList(userId)
+                        }
+                    }
+                } else {
+                    Log.e("UserDataSync", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UserChallengesResponse>, t: Throwable) {
+                Log.e("UserDataSync", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun addChallengeList(userId: String, request: ChallengeRequest) {
+        Log.w("GetChallengeList", "addChallengeList called from getChallengeList")
+
+        val client = databaseApiService.createChallenge(userId, request)
+        client.enqueue(object : Callback<UserChallengeIdResponse> {
+            override fun onResponse(
+                call: Call<UserChallengeIdResponse>,
+                response: Response<UserChallengeIdResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        Log.e("Add Challenge to user", "success")
+                    }
+                } else {
+                    Log.e("Add Challenge to user", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<UserChallengeIdResponse>, t: Throwable) {
+                Log.e("Add Challenge to user", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun getChallengeList(userId: String) {
+        Log.w("ChallengeDataSync", "getChallengeList called from challengeDataSync")
+
+        val client = challengeApiService.getChallengeList()
+        client.enqueue(object : Callback<List<ChallengeListResponseItem>> {
+            override fun onResponse(
+                call: Call<List<ChallengeListResponseItem>>,
+                response: Response<List<ChallengeListResponseItem>>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        for (challenge in responseBody) {
+                            Log.w("Challenge List", responseBody.size.toString())
+                            val request =
+                                ChallengeRequest(
+                                    challengeDesc = challenge.challengeDesc,
+                                    challengePoints = challenge.challengePoints,
+                                    challengeStatus = challenge.challengeStatus,
+                                    challengeTitle = challenge.challengeTitle
+                                )
+                            addChallengeList(userId, request)
+                        }
+                    }
+                } else {
+                    Log.e("Get Challenge List", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<ChallengeListResponseItem>>, t: Throwable) {
+                Log.e("Get Challenge List", "onFailure: ${t.message}")
             }
         })
     }

@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 data class ChallengeRequest(
 
 	@SerializedName("challengePoints")
-	val challengePoints: Int,
+	var challengePoints: Int,
 
 	@SerializedName("challengeDesc")
-	val challengeDesc: String,
+	var challengeDesc: String,
 
 	@SerializedName("challengeTitle")
-	val challengeTitle: String,
+	var challengeTitle: String,
 
 	@SerializedName("challengeStatus")
-	val challengeStatus: String
+	var challengeStatus: String
 )

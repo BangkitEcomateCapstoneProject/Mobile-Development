@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ecomate.Api.ApiConfigDatabase
 import com.example.ecomate.Response.UserChallengesResponse
-import com.example.ecomate.adapter.ChallengeAdapter
+import com.example.ecomate.adapter.CompletedChallengeAdapter
+import com.example.ecomate.adapter.InProgressChallengeAdapter
+import com.example.ecomate.adapter.NotStartedChallengeAdapter
 import com.example.ecomate.databinding.FragmentPageChallengeBinding
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
@@ -19,7 +21,9 @@ import retrofit2.Response
 
 class ChallengeFragment : Fragment() {
     private lateinit var binding: FragmentPageChallengeBinding
-    private lateinit var challengeAdapter: ChallengeAdapter
+    private lateinit var notStartedChallengeAdapter: NotStartedChallengeAdapter
+    private lateinit var inProgressChallengeAdapter: InProgressChallengeAdapter
+    private lateinit var completedChallengeAdapter: CompletedChallengeAdapter
     private lateinit var auth: FirebaseAuth
     private lateinit var radioInProgress: RadioButton
     private lateinit var radioCompleted: RadioButton
@@ -40,29 +44,34 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvChallenge.layoutManager = LinearLayoutManager(activity)
-        challengeAdapter = ChallengeAdapter()
-        binding.rvChallenge.adapter = challengeAdapter
+        notStartedChallengeAdapter = NotStartedChallengeAdapter()
+        inProgressChallengeAdapter = InProgressChallengeAdapter()
+        completedChallengeAdapter = CompletedChallengeAdapter()
 
         radioNotStarted = binding.radioNotStarted
         radioInProgress = binding.radioInProgress
         radioCompleted = binding.radioCompleted
 
-        getNotStartedChallenge()
+        binding.rvChallenge.adapter = inProgressChallengeAdapter
+        getInProgressChallenge()
 
         radioNotStarted.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                binding.rvChallenge.adapter = notStartedChallengeAdapter
                 getNotStartedChallenge()
             }
         }
 
         radioInProgress.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                binding.rvChallenge.adapter = inProgressChallengeAdapter
                 getInProgressChallenge()
             }
         }
 
         radioCompleted.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                binding.rvChallenge.adapter = completedChallengeAdapter
                 getCompletedChallenge()
             }
         }
@@ -82,7 +91,9 @@ class ChallengeFragment : Fragment() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        challengeAdapter.submitList(responseBody.challengeList)
+                        val notStartedChallenge =
+                            responseBody.challengeList.filter { it.challengeStatus == "notStarted" }
+                        notStartedChallengeAdapter.submitList(notStartedChallenge)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -109,7 +120,9 @@ class ChallengeFragment : Fragment() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        challengeAdapter.submitList(responseBody.challengeList)
+                        val inProgressChallenge =
+                            responseBody.challengeList.filter { it.challengeStatus == "inProgress" }
+                        inProgressChallengeAdapter.submitList(inProgressChallenge)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -136,7 +149,9 @@ class ChallengeFragment : Fragment() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        challengeAdapter.submitList(responseBody.challengeList)
+                        val completedChallenge =
+                            responseBody.challengeList.filter { it.challengeStatus == "completed" }
+                        completedChallengeAdapter.submitList(completedChallenge)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

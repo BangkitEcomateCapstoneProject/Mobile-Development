@@ -1,6 +1,7 @@
 package com.example.ecomate.Api
 
 import com.example.ecomate.Response.ArticleResponseItem
+import com.example.ecomate.Response.ChallengeListResponseItem
 import com.example.ecomate.Response.PredictResponse
 import com.example.ecomate.Response.TrashHubResponseItem
 import com.example.ecomate.Response.UserChallengeIdResponse
@@ -65,7 +66,10 @@ interface ApiService {
     fun createChallenge(
         @Path("userId") userId: String,
         @Body request: ChallengeRequest
-    ): UserChallengeIdResponse
+    ): Call<UserChallengeIdResponse>
+
+    @GET("challengeslist")
+    fun getChallengeList(): Call<List<ChallengeListResponseItem>>
 
     @PUT("/{userId}/challenges/{challengeId}/status")
     fun updateChallengeStatus(
