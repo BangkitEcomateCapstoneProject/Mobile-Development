@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 //        setSupportActionBar(binding.layoutAppbar) todo
         binding.bottomNav.background = null
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -52,11 +54,18 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_profile, menu)
-        return true
+        binding.layoutAppbar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.profileAppbar -> {
+                    openFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+
+
+
     }
 
 
