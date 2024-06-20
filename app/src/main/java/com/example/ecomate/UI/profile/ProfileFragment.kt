@@ -108,7 +108,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                     startActivity(intent)
                     activity?.finish()
                 }
-                setNegativeButton(R.string.batal) { _, _, ->
+                setNegativeButton(R.string.cancel) { _, _, ->
 
                 }
                 create()

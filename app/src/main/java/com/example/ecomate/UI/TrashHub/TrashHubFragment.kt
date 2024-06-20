@@ -10,11 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ecomate.Api.ApiConfigTrashHub
 import com.example.ecomate.Api.ApiService
-import com.example.ecomate.Response.TrashHubResponse
 import com.example.ecomate.Response.TrashHubResponseItem
 import com.example.ecomate.adapter.TrashHubAdapter
 import com.example.ecomate.databinding.FragmentTrashHubBinding
-import com.google.android.gms.common.api.Api.Client
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -86,9 +84,8 @@ class TrashHubFragment : Fragment() {
         })
     }
 
-
-
     private fun getTrashHub() {
+        showLoading(true)
         val client = trashHubApiService.getTrashHub()
 
         client.enqueue(object : Callback<List<TrashHubResponseItem>> {
@@ -96,6 +93,7 @@ class TrashHubFragment : Fragment() {
                 call: Call<List<TrashHubResponseItem>>,
                 response: Response<List<TrashHubResponseItem>>
             ) {
+                showLoading(false)
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
@@ -106,8 +104,12 @@ class TrashHubFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<List<TrashHubResponseItem>>, t: Throwable) {
+                showLoading(false)
                 Log.e("API CALL FAILURE", "Failed to fetch TrashHub data", t)
             }
         })
     }
+
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
+
 }

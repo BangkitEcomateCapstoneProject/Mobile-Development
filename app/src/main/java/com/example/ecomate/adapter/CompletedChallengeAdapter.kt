@@ -25,6 +25,7 @@ class CompletedChallengeAdapter : ListAdapter<ChallengeListItem, CompletedChalle
         fun bind(challenge: ChallengeListItem) {
             binding.tvChallengeName.text = challenge.challengeTitle
             binding.tvChallengeDesc.text = challenge.challengeDesc
+            binding.tvChallengePoint.text = challenge.challengePoints.toString()
         }
     }
 

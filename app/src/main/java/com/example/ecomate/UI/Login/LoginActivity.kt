@@ -22,7 +22,6 @@ import com.example.ecomate.Api.ChallengeRequest
 import com.example.ecomate.Api.StoreUserRequest
 import com.example.ecomate.R
 import com.example.ecomate.Response.ChallengeListResponseItem
-import com.example.ecomate.Response.LoginResult
 import com.example.ecomate.Response.UserChallengeIdResponse
 import com.example.ecomate.Response.UserChallengesResponse
 import com.example.ecomate.Response.UserIdResponse
@@ -46,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
     }
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var loginPreferences: LoginPreferences
     private val databaseApiService: ApiService = ApiConfigDatabase.getApiService()
     private val challengeApiService: ApiService = ApiConfigChallenge.getApiService()
 
@@ -59,7 +57,6 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
         setupView()
         val currentUser = auth.currentUser
-        loginPreferences = LoginPreferences(this)
 
         if (currentUser != null) {
             // The user is already signed in, navigate to MainActivity
@@ -93,9 +90,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
-                        // Save user info to shared preferences
-                        val loginResult = LoginResult(user.uid, user.displayName, user.getIdToken(false).result?.token)
-                        loginPreferences.setLogin(loginResult)
                         userDataSync(user.uid)
                     }
                     startActivity(Intent(this, MainActivity::class.java))

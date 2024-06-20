@@ -40,6 +40,29 @@
             android:textSize="12sp"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_regular"/>
+
+        <TextView
+            android:id="@+id/tv_challengePointText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_challengeDesc"
+            app:layout_constraintStart_toStartOf="@id/tv_challengeName"
+            android:layout_marginTop="4dp"
+            android:text="@string/challenge_point"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_regular"/>
+
+        <TextView
+            android:id="@+id/tv_challengePoint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_challengePointText"
+            app:layout_constraintStart_toEndOf="@id/tv_challengePointText"
+            android:layout_marginStart="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_regular"/>
         
         <ImageView
             android:id="@+id/img_challenge_completed"

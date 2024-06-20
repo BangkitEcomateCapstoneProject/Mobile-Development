@@ -11,11 +11,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.ecomate.DashboardFragment
 import com.example.ecomate.R
 import com.example.ecomate.UI.Challenge.ChallengeFragment
 import com.example.ecomate.UI.ResultPredict.ResultPredictActivity
 import com.example.ecomate.UI.TrashHub.TrashHubFragment
+import com.example.ecomate.UI.dashboard.DashboardFragment
 import com.example.ecomate.UI.profile.ProfileFragment
 import com.example.ecomate.databinding.ActivityMainBinding
 

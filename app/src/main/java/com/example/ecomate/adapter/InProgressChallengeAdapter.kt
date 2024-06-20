@@ -38,6 +38,7 @@ class InProgressChallengeAdapter(private val refreshChallenges: () -> Unit) : Li
         fun bind(challenge: ChallengeListItem) {
             binding.tvChallengeName.text = challenge.challengeTitle
             binding.tvChallengeDesc.text = challenge.challengeDesc
+            binding.tvChallengePoint.text = challenge.challengePoints.toString()
             binding.btnCheckChallenge.setOnClickListener {
                 checkChallengeStatus(challenge.challengeId, challenge.challengePoints)
             }

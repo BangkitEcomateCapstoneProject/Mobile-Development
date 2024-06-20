@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">EcoMate</string>
     <string name="dashboard">Dashboard</string>
-    <string name="welcome">Welcome,</string>
+    <string name="welcome">Welcome, </string>
     <string name="username">username</string>
     <string name="location">Location</string>
     <string name="air_quality_index">Air Quality Index</string>
-    <string name="index_number">20</string>
+    <string name="index_number">25</string>
     <string name="index_header">Air is</string>
     <string name="index_quality">GOOD</string>
     <string name="challenge_today">Challenge Today:</string>
@@ -34,9 +34,9 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="sign_in_to_continue">Sign In to continue</string>
-    <string name="logoutMessage">Anda akan logout. Anda harus login untuk mengakses EcoMate.</string>
-    <string name="logoutTitle">Anda akan logout!</string>
-    <string name="batal">batal</string>
+    <string name="logoutMessage">You will be logged out. You must log in to access EcoMate.</string>
+    <string name="logoutTitle">You will be logged out!</string>
+    <string name="cancel">cancel</string>
     <string name="resultPredict">loading prediction…</string>
     <string name="article_content">Article Content</string>
     <string name="title_article">Title Article</string>
@@ -47,5 +47,6 @@
     <string name="in_progress">In Progress</string>
     <string name="completed">Completed</string>
     <string name="not_started">Not Started</string>
+    <string name="challenge_point">Challenge point:</string>
 
 </resources>
