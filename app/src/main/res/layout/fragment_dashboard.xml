@@ -194,6 +194,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginStart="30dp"
                         android:text="@string/challenge_desc"
+                        android:maxLines="3"
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:fontFamily="@font/poppins_regular"/>
@@ -325,7 +326,12 @@
                         android:fontFamily="@font/poppins_regular" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_Article"/>
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"

@@ -37,6 +37,7 @@
             app:layout_constraintEnd_toStartOf="@id/btn_remove_challenge"
             android:layout_marginTop="4dp"
             android:text="@string/challenge_desc"
+            android:maxLines="3"
             android:textSize="12sp"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_regular"/>
