@@ -44,8 +44,12 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvChallenge.layoutManager = LinearLayoutManager(activity)
-        notStartedChallengeAdapter = NotStartedChallengeAdapter()
-        inProgressChallengeAdapter = InProgressChallengeAdapter()
+        notStartedChallengeAdapter = NotStartedChallengeAdapter {
+            getNotStartedChallenge()
+        }
+        inProgressChallengeAdapter = InProgressChallengeAdapter {
+            getInProgressChallenge()
+        }
         completedChallengeAdapter = CompletedChallengeAdapter()
 
         radioNotStarted = binding.radioNotStarted
@@ -93,7 +97,9 @@ class ChallengeFragment : Fragment() {
                     if (responseBody != null) {
                         val notStartedChallenge =
                             responseBody.challengeList.filter { it.challengeStatus == "notStarted" }
-                        notStartedChallengeAdapter.submitList(notStartedChallenge)
+                        notStartedChallengeAdapter.submitList(notStartedChallenge) {
+                            binding.rvChallenge.scrollToPosition(0)
+                        }
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -122,7 +128,9 @@ class ChallengeFragment : Fragment() {
                     if (responseBody != null) {
                         val inProgressChallenge =
                             responseBody.challengeList.filter { it.challengeStatus == "inProgress" }
-                        inProgressChallengeAdapter.submitList(inProgressChallenge)
+                        inProgressChallengeAdapter.submitList(inProgressChallenge) {
+                            binding.rvChallenge.scrollToPosition(0)
+                        }
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -151,7 +159,9 @@ class ChallengeFragment : Fragment() {
                     if (responseBody != null) {
                         val completedChallenge =
                             responseBody.challengeList.filter { it.challengeStatus == "completed" }
-                        completedChallengeAdapter.submitList(completedChallenge)
+                        completedChallengeAdapter.submitList(completedChallenge) {
+                            binding.rvChallenge.scrollToPosition(0)
+                        }
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

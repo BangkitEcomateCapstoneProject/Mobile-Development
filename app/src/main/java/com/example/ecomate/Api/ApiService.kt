@@ -76,13 +76,13 @@ interface ApiService {
         @Path("userId") userId: String,
         @Path("challengeId") challengeId: Int,
         @Body request: ChallengeStatusRequest
-    ): UserChallengeIdResponse
+    ): Call<UserChallengeIdResponse>
 
     @POST("/{userId}/addPoints")
     fun addPointToUser(
         @Path("userId") userId: String,
         @Body request: AddPointRequest
-    ): UserIdResponse
+    ): Call<UserIdResponse>
 
     //create Trash Detection todo
     //get data Trash Detection todo
