@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <application
-        android:windowSoftInputMode="adjustPan"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,6 +27,8 @@
             android:exported="false" />
         <activity
             android:name=".UI.Main.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".UI.Register.RegisterActivity"
