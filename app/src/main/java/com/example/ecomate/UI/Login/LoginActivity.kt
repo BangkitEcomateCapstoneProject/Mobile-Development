@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -35,14 +36,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class LoginActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "GoogleActivity"
     }
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private val databaseApiService: ApiService = ApiConfigDatabase.getApiService()
@@ -70,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
             login()
         }
     }
+
     private fun setupView() {
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -84,16 +90,26 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
+        showLoading(true)
+
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null) {
-                        userDataSync(user.uid)
+                        lifecycleScope.launch {
+                            try {
+                                userDataSync(user.uid)
+                                showLoading(false)
+                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                finish()
+                            } catch (e: Exception) {
+                                Log.e("LoginActivity", "Error in userDataSync: ${e.message}")
+                                // Handle error appropriately, e.g., show a message to the user
+                            }
+                        }
                     }
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
                 } else {
                     Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
                 }
@@ -129,7 +145,8 @@ class LoginActivity : AppCompatActivity() {
             is CustomCredential -> {
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
-                        val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                        val googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(credential.data)
                         firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e(TAG, "Received an invalid google id token response", e)
@@ -139,6 +156,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.e(TAG, "Unexpected type of credential")
                 }
             }
+
             else -> {
                 // Catch any unrecognized credential type here.
                 Log.e(TAG, "Unexpected type of credential")
@@ -146,31 +164,48 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun userDataSync(userId: String) {
-        val client = databaseApiService.getUserById(userId)
-        client.enqueue(object : Callback<UserIdResponse> {
-            override fun onResponse(
-                call: Call<UserIdResponse>,
-                response: Response<UserIdResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        if (responseBody.error) {
-                            val userEmail = auth.currentUser!!.email
-                            storeUser(userId, userEmail!!)
+    private suspend fun userDataSync(userId: String) {
+        return suspendCancellableCoroutine { continuation ->
+            val client = databaseApiService.getUserById(userId)
+            client.enqueue(object : Callback<UserIdResponse> {
+                override fun onResponse(
+                    call: Call<UserIdResponse>,
+                    response: Response<UserIdResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            if (responseBody.error) {
+                                val userEmail = auth.currentUser!!.email
+                                storeUser(userId, userEmail!!)
+                            }
+                            lifecycleScope.launch {
+                                try {
+                                    challengeDataSync(userId)
+                                    continuation.resume(Unit)
+                                } catch (e: Exception) {
+                                    continuation.resumeWithException(e)
+                                }
+                            }
+                        } else {
+                            continuation.resume(Unit)
                         }
-                        challengeDataSync(userId)
+                    } else {
+                        Log.e("UserDataSync", "onFailure: ${response.message()}")
+                        continuation.resumeWithException(Exception("UserDataSync failed: ${response.message()}"))
                     }
-                } else {
-                    Log.e("UserDataSync", "onFailure: ${response.message()}")
                 }
-            }
 
-            override fun onFailure(call: Call<UserIdResponse>, t: Throwable) {
-                Log.e("UserDataSync", "onFailure: ${t.message}")
+                override fun onFailure(call: Call<UserIdResponse>, t: Throwable) {
+                    Log.e("UserDataSync", "onFailure: ${t.message}")
+                    continuation.resumeWithException(t)
+                }
+            })
+
+            continuation.invokeOnCancellation {
+                client.cancel()
             }
-        })
+        }
     }
 
     private fun storeUser(userId: String, userEmail: String) {
@@ -196,92 +231,135 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    private fun challengeDataSync(userId: String) {
-        Log.w("UserDataSync", "challengeDataSync called from UserDataSync")
+    private suspend fun challengeDataSync(userId: String) {
+        return suspendCancellableCoroutine { continuation ->
+            Log.w("UserDataSync", "challengeDataSync called from UserDataSync")
 
-        val client = databaseApiService.getUserChallenges(userId)
-        client.enqueue(object : Callback<UserChallengesResponse> {
-            override fun onResponse(
-                call: Call<UserChallengesResponse>,
-                response: Response<UserChallengesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        if (responseBody.challengeList.isEmpty()) {
-                            getChallengeList(userId)
+            val client = databaseApiService.getUserChallenges(userId)
+            client.enqueue(object : Callback<UserChallengesResponse> {
+                override fun onResponse(
+                    call: Call<UserChallengesResponse>,
+                    response: Response<UserChallengesResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null && responseBody.challengeList.isEmpty()) {
+                            lifecycleScope.launch {
+                                try {
+                                    getChallengeList(userId)
+                                    continuation.resume(Unit)
+                                } catch (e: Exception) {
+                                    continuation.resumeWithException(e)
+                                }
+                            }
+                        } else {
+                            continuation.resume(Unit)
                         }
+                    } else {
+                        Log.e("UserDataSync", "onFailure: ${response.message()}")
+                        continuation.resumeWithException(Exception("ChallengeDataSync failed: ${response.message()}"))
                     }
-                } else {
-                    Log.e("UserDataSync", "onFailure: ${response.message()}")
                 }
-            }
 
-            override fun onFailure(call: Call<UserChallengesResponse>, t: Throwable) {
-                Log.e("UserDataSync", "onFailure: ${t.message}")
+                override fun onFailure(call: Call<UserChallengesResponse>, t: Throwable) {
+                    Log.e("UserDataSync", "onFailure: ${t.message}")
+                    continuation.resumeWithException(t)
+                }
+            })
+
+            continuation.invokeOnCancellation {
+                client.cancel()
             }
-        })
+        }
     }
 
-    private fun addChallengeList(userId: String, request: ChallengeRequest) {
-        Log.w("GetChallengeList", "addChallengeList called from getChallengeList")
+    private suspend fun addChallengeList(userId: String, request: ChallengeRequest) {
+        return suspendCancellableCoroutine { continuation ->
+            Log.w("GetChallengeList", "addChallengeList called from getChallengeList")
 
-        val client = databaseApiService.createChallenge(userId, request)
-        client.enqueue(object : Callback<UserChallengeIdResponse> {
-            override fun onResponse(
-                call: Call<UserChallengeIdResponse>,
-                response: Response<UserChallengeIdResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        Log.e("Add Challenge to user", "success")
-                    }
-                } else {
-                    Log.e("Add Challenge to user", "onFailure: ${response.message()}")
-                }
-            }
-
-            override fun onFailure(call: Call<UserChallengeIdResponse>, t: Throwable) {
-                Log.e("Add Challenge to user", "onFailure: ${t.message}")
-            }
-        })
-    }
-
-    private fun getChallengeList(userId: String) {
-        Log.w("ChallengeDataSync", "getChallengeList called from challengeDataSync")
-
-        val client = challengeApiService.getChallengeList()
-        client.enqueue(object : Callback<List<ChallengeListResponseItem>> {
-            override fun onResponse(
-                call: Call<List<ChallengeListResponseItem>>,
-                response: Response<List<ChallengeListResponseItem>>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        for (challenge in responseBody) {
-                            Log.w("Challenge List", responseBody.size.toString())
-                            val request =
-                                ChallengeRequest(
-                                    challengeDesc = challenge.challengeDesc,
-                                    challengePoints = challenge.challengePoints,
-                                    challengeStatus = challenge.challengeStatus,
-                                    challengeTitle = challenge.challengeTitle
-                                )
-                            addChallengeList(userId, request)
+            val client = databaseApiService.createChallenge(userId, request)
+            client.enqueue(object : Callback<UserChallengeIdResponse> {
+                override fun onResponse(
+                    call: Call<UserChallengeIdResponse>,
+                    response: Response<UserChallengeIdResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            Log.e("Add Challenge to user", "success")
                         }
+                        continuation.resume(Unit)
+                    } else {
+                        Log.e("Add Challenge to user", "onFailure: ${response.message()}")
+                        continuation.resumeWithException(Exception("Add Challenge to user failed: ${response.message()}"))
                     }
-                } else {
-                    Log.e("Get Challenge List", "onFailure: ${response.message()}")
                 }
-            }
 
-            override fun onFailure(call: Call<List<ChallengeListResponseItem>>, t: Throwable) {
-                Log.e("Get Challenge List", "onFailure: ${t.message}")
+                override fun onFailure(call: Call<UserChallengeIdResponse>, t: Throwable) {
+                    Log.e("Add Challenge to user", "onFailure: ${t.message}")
+                    continuation.resumeWithException(t)
+                }
+            })
+
+            continuation.invokeOnCancellation {
+                client.cancel()
             }
-        })
+        }
     }
+
+    private suspend fun getChallengeList(userId: String) {
+        return suspendCancellableCoroutine { continuation ->
+            Log.w("ChallengeDataSync", "getChallengeList called from challengeDataSync")
+
+            val client = challengeApiService.getChallengeList()
+            client.enqueue(object : Callback<List<ChallengeListResponseItem>> {
+                override fun onResponse(
+                    call: Call<List<ChallengeListResponseItem>>,
+                    response: Response<List<ChallengeListResponseItem>>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null && responseBody.isNotEmpty()) {
+                            lifecycleScope.launch {
+                                try {
+                                    for (challenge in responseBody) {
+                                        Log.w("Challenge List", responseBody.size.toString())
+                                        val request = ChallengeRequest(
+                                            challengeDesc = challenge.challengeDesc,
+                                            challengePoints = challenge.challengePoints,
+                                            challengeStatus = challenge.challengeStatus,
+                                            challengeTitle = challenge.challengeTitle
+                                        )
+                                        addChallengeList(userId, request)
+                                    }
+                                    continuation.resume(Unit)
+                                } catch (e: Exception) {
+                                    continuation.resumeWithException(e)
+                                }
+                            }
+                        } else {
+                            continuation.resume(Unit)
+                        }
+                    } else {
+                        Log.e("Get Challenge List", "onFailure: ${response.message()}")
+                        continuation.resumeWithException(Exception("Get Challenge List failed: ${response.message()}"))
+                    }
+                }
+
+                override fun onFailure(call: Call<List<ChallengeListResponseItem>>, t: Throwable) {
+                    Log.e("Get Challenge List", "onFailure: ${t.message}")
+                    continuation.resumeWithException(t)
+                }
+            })
+
+            continuation.invokeOnCancellation {
+                client.cancel()
+            }
+        }
+    }
+
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
+
 }
 
 
